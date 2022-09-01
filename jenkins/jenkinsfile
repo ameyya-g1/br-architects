@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'https://github.com/ameyya-g1/J2eeApp.git'
+                
+                sh "cd sample-web"
+
+                dir('sample-web/') {
+                    // Run Maven on a Unix agent.
+                    sh "docker build --no-cache -t ameyyag1/sampleweb:v$BUILD_NUMBER ."
+                }
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+
+
+        }
+        stage('Docker image push') {
+            steps {
+                sh "docker  push  ameyyag1/sampleweb:v$BUILD_NUMBER"
+            }
+        }
+        stage('Deploy to instance1') {
+            steps {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                    sshagent (credentials: ['ssh-ec2']) {
+                        // sh 'scp sample-web/target/sample-web.war ec2-user@44.200.142.136:/tmp'
+                        sh 'ssh -o StrictHostKeyChecking=no -l ec2-user 44.200.142.136 /home/ec2-user/deploy.sh $BUILD_NUMBER'
+                        
+                    }
+                }
+            }
+        }
+        
+        stage('Deploy to instance2') {
+            steps {
+                sshagent (credentials: ['ssh-ec2']) {
+                    
+                    sh 'ssh -o StrictHostKeyChecking=no -l ec2-user 3.236.147.31 /home/ec2-user/deploy.sh $BUILD_NUMBER'
+                }
+            }
+        }
+        
+    }
+}
