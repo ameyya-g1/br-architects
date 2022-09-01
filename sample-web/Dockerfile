@@ -17,6 +17,8 @@ RUN git clone https://github.com/ameyya-g1/J2eeApp.git/
 
 WORKDIR /home/sample-web/git_code/J2eeApp/sample-web
 
+RUN git checkout master
+
 RUN mvn clean install
 
 RUN cp /home/sample-web/git_code/J2eeApp/sample-web/target/sample-web.war  /usr/local/tomcat/webapps/
