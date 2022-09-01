@@ -6,8 +6,6 @@ LABEL email="ameyya.g1@gmail.com"
 RUN apk update
 RUN apk add git
 RUN apk add maven
-#RUN yum -y install java
-#RUN yum -y install tomcat
 
 RUN mkdir /home/sample-web
 RUN mkdir /home/sample-web/git_code
