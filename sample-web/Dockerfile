@@ -15,13 +15,13 @@ WORKDIR /home/sample-web/git_code
 RUN rm -rf J2eeApp
 RUN git clone https://github.com/ameyya-g1/br-architects.git
 
-WORKDIR /home/sample-web/git_code/J2eeApp/sample-web
+WORKDIR /home/sample-web/git_code/br-architects/sample-web
 
 RUN git checkout master
 
 RUN mvn clean install
 
-RUN cp /home/sample-web/git_code/J2eeApp/sample-web/target/sample-web.war  /usr/local/tomcat/webapps/
+RUN cp /home/sample-web/git_code/br-architects/sample-web/target/sample-web.war  /usr/local/tomcat/webapps/
 RUN rm -rf /usr/share/tomcat/webapps/sample-web
 
 EXPOSE 8080
